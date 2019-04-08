@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Home
+{% endblock %}
+
+{% block content %}
+
+<div style="background:#232323;">
+  <h2 style="color:#FFFFFF">
+    Latest posts for you
+  </h2><br>
+  <table>
+    <tr>
+      {% for post in posts.items %}
+        {% include '_post.html' %}
+      {% endfor %}
+    </tr>
+  </table>
+  {% if posts.has_prev %}
+    <a href="./?p={{ posts.prev_num }}">Newer posts</a>
+  {% endif %}
+  {% if posts.has_next %}
+    <a href="./?p={{ posts.next_num }}">Older posts</a>
+  {% endif %}
+</div>
+{% endblock %}

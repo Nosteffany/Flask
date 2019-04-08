@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block title %} Searching {% endblock %}
+{% block nav %}
+<form class="form-inline my-2 my-lg-0" method="GET">
+  <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="u" value="{{ request.args.get('u','') }}">
+  <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+</form>
+{% endblock %}
+<!-- Добавить if  -->
+{% block content %}
+<table cellpadding=5>
+  {% for user in user_list %}
+    <tr>
+      <td><img src='{{ user.avatar(size=50) }}'><td>
+      <td>
+
+          <a href="{{ url_for('user', username=user.username) }}">
+              {{user.username}}
+          </a>
+
+          {% if current_user.already_followed(user) %}
+            <p><a href="{{ url_for('unfollow',username=user.username) }}">Unfollow</a></p>
+          {% else %}
+            <p><a href="{{ url_for('follow',username=user.username) }}">Follow</a></p>
+          {% endif %}
+
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}
+onclick="{{ current_user.follow(user) }}

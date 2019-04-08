@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  My page
+{% endblock %}
+
+{% block nav %}
+  <form class="form-inline my-2 my-lg-0" method="GET">
+    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="u" value="{{ request.args.get('u','') }}">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+{% endblock %}
+
+{% block content %}
+<table>
+        <tr valign="top">
+            <td><img src="{{ user.avatar() }}"></td>
+            <td>
+              <h1>{{ user.username }}</h1>
+
+                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
+                {% if user.last_seen %}<p> Last seen on: {{ user.last_seen  }}</p>{% endif %}
+
+                {% if user == current_user %}
+                  <p>{{ user.followers.count() }} <a href="{{ url_for('followers') }}">followers</a>, {{ user.followed.count() }}  <a href="{{ url_for('following') }}">following</a>.</p>
+                {% else %}
+                  <p>{{ user.followers.count() }} followers, {{ user.followed.count() }} following.</p>
+                {% endif %}
+
+                {% if user == current_user %}
+                  <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+                {% elif not current_user.already_followed(user) %}
+                  <p><a href="{{ url_for('follow', username=user.username) }}">Follow</a></p>
+                {% else %}
+                  <p><a href="{{ url_for('unfollow', username=user.username) }}">Unfollow</a></p>
+
+                {% endif %}
+
+              </td>
+        </tr>
+    </table>
+
+    <div style="background:white">
+      <hr><br>
+    {% if user == current_user %}
+    <form action="" method="post">
+      {{ form.hidden_tag() }}
+      <!-- <p>
+      {{ form.title.label }}
+      {{ form.title() }}
+      {% for error in form.body.errors %}
+        <span style="color:red;">[{{error}}]</span>
+      {% endfor %}
+      </p> -->
+      <p>
+        {{ form.body.title }}
+        {{ form.body(cols=36,rows=4) }}
+        {% for error in form.body.errors %}
+          <span style="color:red;">[{{error}}]</span>
+        {% endfor %}
+      </p>
+      <p>
+        {{ form.submit() }}
+      </p>
+      {% endif %}
+
+    </form>
+    <table>
+      {% for post in posts %}
+      <tr valign="top">
+        <td><img src="{{ post.author.avatar(70) }}"></td>
+        <td>
+          <p ><b>
+            {{ post.author.username }}
+          </b></p>
+            <p>{{ post.body }}</p>
+            <p>{{ post.date }}</p><hr>
+        </td>
+      </tr>
+
+      {% endfor %}
+   </table>
+   </div>
+{% endblock %}
